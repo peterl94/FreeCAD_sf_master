@@ -6,13 +6,14 @@ version = "0.15"
 source = {"type":"archive", "url":
           "https://github.com/tpaviot/oce/archive/OCE-0.15.zip"}
 depends_on = ["freetype", "freeimage"]
-    
+patches = []
+
 def build(libpack):
     if not os.path.exists("cmake_build"):
         os.mkdir("cmake_build")
-        
+
     os.chdir("cmake_build")
-    
+
     tmp_install = os.path.join(libpack.config.get("Paths", "workspace"),
                                "tmp_install")
 
@@ -20,16 +21,12 @@ def build(libpack):
     #os.environ["FREETYPE_DIR"] = libpack.path
 
     generator = ""
-    
+
     if libpack.toolchain.startswith("vc"):
-        if libpack.toolchain == "vc9":
-            generator = "Visual Studio 9 2008"
-        else:
-            print(libpack.toolchain + " not supported for " + name)
 
         ft_include = "FREETYPE_INCLUDE_DIRS="\
-                 "{0}/include/freetype2".format(libpack.path)
-        
+                "{0}/include/freetype2".format(libpack.path)
+
         utils.run_cmd("cmake", ["-D", "OCE_INSTALL_PREFIX=" + tmp_install,
                                 "-D", "OCE_INSTALL_BIN_DIR=bin",
                                 "-D", "OCE_INSTALL_LIB_DIR=lib",
@@ -41,23 +38,22 @@ def build(libpack):
                                 "-D", "OCE_DRAW=ON",
                                 "-D", "OCE_WITH_FREEIMAGE=ON",
                                 "-D", "CMAKE_USE_RELATIVE_PATHS=ON",
-                                "-G", generator, ".."])
-            
+                                "-G", libpack.cmake_generator, ".."])
+
         print("\nBuilding release...\n")
-        utils.run_cmd("vcbuild", ["OCE.sln", "Release|Win32"])
+        libpack.vcbuild("OCE.sln", "Release", "Win32")
 
         print("\nBuilding debug...\n")
-        utils.run_cmd("vcbuild", ["OCE.sln", "Debug|Win32"])
-    
+        libpack.vcbuild("OCE.sln", "Debug", "Win32")
+
 def install(libpack):
     tmp_install = os.path.join(libpack.config.get("Paths", "workspace"),
                                "tmp_install")
-    
+
     if libpack.toolchain.startswith("vc"):
-        if libpack.toolchain == "vc9":
-            utils.run_cmd("vcbuild", ["INSTALL.vcproj", "Release|Win32"])
-            utils.run_cmd("vcbuild", ["INSTALL.vcproj", "Debug|Win32"])
-            
+        libpack.vcbuild("INSTALL" + libpack.cmake_projext, "Release", "Win32")
+        libpack.vcbuild("INSTALL" + libpack.cmake_projext, "Debug", "Win32")
+
     files = utils.move(os.path.join(tmp_install, "include"),
                        libpack.path, "include", root=False)
 

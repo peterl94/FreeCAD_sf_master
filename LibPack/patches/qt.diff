@@ -1,0 +1,101 @@
+--- src\3rdparty\javascriptcore\JavaScriptCore\wtf\MathExtras.h	Thu Jun 06 22:16:58 2013
++++ src\3rdparty\javascriptcore\JavaScriptCore\wtf\MathExtras_new.h	Sun Mar 16 12:04:59 2014
+@@ -98,6 +98,8 @@
+ 
+ #if COMPILER(MSVC) || COMPILER(RVCT)
+ 
++#if _MSC_VER < 1800 
++
+ // We must not do 'num + 0.5' or 'num - 0.5' because they can cause precision loss.
+ static double round(double num)
+ {
+@@ -118,6 +120,7 @@
+ inline long lround(double num) { return static_cast<long>(round(num)); }
+ inline long lroundf(float num) { return static_cast<long>(roundf(num)); }
+ inline double trunc(double num) { return num > 0 ? floor(num) : ceil(num); }
++#endif
+ 
+ #endif
+ 
+@@ -125,7 +128,9 @@
+ 
+ inline bool isinf(double num) { return !_finite(num) && !_isnan(num); }
+ inline bool isnan(double num) { return !!_isnan(num); }
++#if _MSC_VER < 1800
+ inline bool signbit(double num) { return _copysign(1.0, num) < 0; }
++#endif
+ 
+ inline double nextafter(double x, double y) { return _nextafter(x, y); }
+ inline float nextafterf(float x, float y) { return x > y ? x - FLT_EPSILON : x + FLT_EPSILON; }
+ 
+--- src\3rdparty\webkit\Source\JavaScriptCore\wtf\HashSet.h	Thu Jun 06 22:16:54 2013
++++ src\3rdparty\webkit\Source\JavaScriptCore\wtf\HashSet.h	Sun Mar 16 16:17:28 2014
+@@ -92,6 +92,17 @@
+         friend void deleteAllValues<>(const HashSet&);
+         friend void fastDeleteAllValues<>(const HashSet&);
+ 
++		// msvc2012 has trouble constructing a HashTableConstIteratorAdapter from a HashTableIterator
++		// despite the existence of a const_iterator cast method on the latter class.
++		pair<iterator, bool> iterator_const_cast(const pair<typename HashTableType::iterator, bool>& p)
++		{
++			// Spell out the full conversion chain for clarity, although any of the â€œhintâ€
++			// given by the alternatives below would have been enough.
++			return make_pair(iterator(HashTableType::const_iterator(p.first)), p.second);
++			// return make_pair(iterator(p.first), p.second);
++			// return make_pair(HashTableType::const_iterator(p.first), p.second);
++		}
++
+         HashTableType m_impl;
+     };
+ 
+@@ -177,7 +188,7 @@
+     template<typename T, typename U, typename V>
+     inline pair<typename HashSet<T, U, V>::iterator, bool> HashSet<T, U, V>::add(const ValueType& value)
+     {
+-        return m_impl.add(value);
++        return iterator_const_cast(m_impl.add(value));
+     }
+ 
+     template<typename Value, typename HashFunctions, typename Traits>
+@@ -186,7 +197,7 @@
+     HashSet<Value, HashFunctions, Traits>::add(const T& value)
+     {
+         typedef HashSetTranslatorAdapter<ValueType, ValueTraits, T, HashTranslator> Adapter;
+-        return m_impl.template addPassingHashCode<T, T, Adapter>(value, value);
++        return iterator_const_cast(m_impl.template addPassingHashCode<T, T, Adapter>(value, value));
+     }
+ 
+     template<typename T, typename U, typename V>
+
+--- src\3rdparty\webkit\Source\JavaScriptCore\wtf\MathExtras.h	Thu Jun 06 22:16:54 2013
++++ src\3rdparty\webkit\Source\JavaScriptCore\wtf\MathExtras.h	Sun Mar 16 16:10:49 2014
+@@ -112,6 +112,8 @@
+ 
+ #if COMPILER(MSVC) || (COMPILER(RVCT) && !(RVCT_VERSION_AT_LEAST(3, 0, 0, 0)))
+ 
++#if _MSC_VER < 1800
++
+ // We must not do 'num + 0.5' or 'num - 0.5' because they can cause precision loss.
+ static double round(double num)
+ {
+@@ -135,6 +137,8 @@
+ 
+ #endif
+ 
++#endif
++
+ #if COMPILER(MSVC)
+ // The 64bit version of abs() is already defined in stdlib.h which comes with VC10
+ #if COMPILER(MSVC9_OR_LOWER)
+@@ -143,7 +147,10 @@
+ 
+ inline bool isinf(double num) { return !_finite(num) && !_isnan(num); }
+ inline bool isnan(double num) { return !!_isnan(num); }
++
++#if _MSC_VER < 1800
+ inline bool signbit(double num) { return _copysign(1.0, num) < 0; }
++#endif
+ 
+ inline double nextafter(double x, double y) { return _nextafter(x, y); }
+ inline float nextafterf(float x, float y) { return x > y ? x - FLT_EPSILON : x + FLT_EPSILON; }
+ 

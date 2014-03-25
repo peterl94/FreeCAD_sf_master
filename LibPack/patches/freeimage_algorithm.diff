@@ -1,0 +1,10 @@
+--- Source\OpenEXR\Imath\ImathLimits.h	Tue Jul 17 22:27:26 2012
++++ Source\OpenEXR\Imath\ImathLimits_new.h	Fri Mar 21 23:04:58 2014
+@@ -45,6 +45,7 @@
+
+ #include <float.h>
+ #include <limits.h>
++#include <algorithm>
+
+ //------------------------------------------
+ // In Windows, min and max are macros.  Yay.

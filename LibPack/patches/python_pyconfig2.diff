@@ -1,0 +1,14 @@
+--- PC\pyconfig.h	Sun Nov 10 00:36:41 2013
++++ PC\pyconfig_new.h	Sun Mar 23 22:26:21 2014
+@@ -106,6 +106,11 @@
+ /* Microsoft C defines _MSC_VER */
+ #ifdef _MSC_VER
+
++
++#if _MSC_VER >= 1800
++#define HAVE_ROUND 1
++#endif
++
+ /* We want COMPILER to expand to a string containing _MSC_VER's *value*.
+  * This is horridly tricky, because the stringization operator only works
+  * on macro arguments, and doesn't evaluate macros passed *as* arguments.

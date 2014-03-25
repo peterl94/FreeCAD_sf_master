@@ -1,0 +1,183 @@
+--- build\msvc9\include\Inventor\system\inttypes.h	Tue Mar 02 06:20:09 2010
++++ build\msvc9\include\Inventor\system\inttypes_new.h	Sat Mar 15 11:13:23 2014
+@@ -70,7 +70,7 @@
+ /* The <inttypes.h> header file. */
+ /* #undef HAVE_INTTYPES_H */
+ /* The <stdint.h> header file. */
+-/* #undef HAVE_STDINT_H */
++#define HAVE_STDINT_H 1
+ /* The <sys/types.h> header file. */
+ #define HAVE_SYS_TYPES_H 1
+ /* The <stddef.h> header file. */
+@@ -79,27 +79,27 @@
+ 
+ /* If the system defines any of the types "on it's own", the
+    respective #define will be set below. */
+-/* #undef HAVE_INT8_T */
+-/* #undef HAVE_UINT8_T */
+-/* #undef HAVE_INT16_T */
+-/* #undef HAVE_UINT16_T */
+-/* #undef HAVE_INT32_T */
+-/* #undef HAVE_UINT32_T */
+-/* #undef HAVE_INT64_T */
+-/* #undef HAVE_UINT64_T */
++#define HAVE_INT8_T 1
++#define HAVE_UINT8_T 1
++#define HAVE_INT16_T 1
++#define HAVE_UINT16_T 1
++#define HAVE_INT32_T 1
++#define HAVE_UINT32_T 1
++#define HAVE_INT64_T 1
++#define HAVE_UINT64_T 1
+ #define HAVE_INTPTR_T 1
+ #define HAVE_UINTPTR_T 1
+ 
+ /* The type which the configure script found to match the given
+    bitwidth. */
+-#define COIN_INT8_T char
+-#define COIN_UINT8_T unsigned char
+-#define COIN_INT16_T short
+-#define COIN_UINT16_T unsigned short
+-#define COIN_INT32_T int
+-#define COIN_UINT32_T unsigned int
+-#define COIN_INT64_T long long
+-#define COIN_UINT64_T unsigned long long
++#define COIN_INT8_T int8_t
++#define COIN_UINT8_T uint8_t
++#define COIN_INT16_T int16_t
++#define COIN_UINT16_T uint16_t
++#define COIN_INT32_T int32_t
++#define COIN_UINT32_T uint32_t
++#define COIN_INT64_T int64_t
++#define COIN_UINT64_T uint64_t
+ #define COIN_INTPTR_T intptr_t
+ #define COIN_UINTPTR_T uintptr_t
+
+--- build\msvc9\src\config-debug.h	Tue Mar 02 06:20:09 2010
++++ build\msvc9\src\config-debug_new.h	Sat Mar 15 11:10:43 2014
+@@ -23,16 +23,16 @@
+ #define COIN_CONFIGURE_TARGET I686_PC_CYGWIN
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_INT16_T short
++#define COIN_INT16_T int16_t
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_INT32_T int
++#define COIN_INT32_T int32_t
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_INT64_T long long
++#define COIN_INT64_T int64_t
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_INT8_T char
++#define COIN_INT8_T int8_t
+ 
+ /* define this to a type of the indicated bitwidth */
+ #define COIN_INTPTR_T intptr_t
+@@ -65,16 +65,16 @@
+ #define COIN_THREADID_TYPE DWORD
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_UINT16_T unsigned short
++#define COIN_UINT16_T uint16_t
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_UINT32_T unsigned int
++#define COIN_UINT32_T uint32_t
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_UINT64_T unsigned long long
++#define COIN_UINT64_T uint64_t
+ 
+ /* define this to a type of the indicated bitwidth */
+-#define COIN_UINT8_T unsigned char
++#define COIN_UINT8_T uint8_t
+ 
+ /* define this to a type of the indicated bitwidth */
+ #define COIN_UINTPTR_T uintptr_t
+@@ -209,16 +209,16 @@
+ /* #undef HAVE_ILOGB */
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT16_T */
++#define HAVE_INT16_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT32_T */
++#define HAVE_INT32_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT64_T */
++#define HAVE_INT64_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT8_T */
++#define HAVE_INT8_T 1
+ 
+ /* define this if the type is available on the system */
+ #define HAVE_INTPTR_T 1
+@@ -296,7 +296,7 @@
+ #define HAVE_STDDEF_H 1
+ 
+ /* Define to 1 if you have the <stdint.h> header file. */
+-/* #undef HAVE_STDINT_H */
++#define HAVE_STDINT_H 1
+ 
+ /* Define to 1 if you have the <stdlib.h> header file. */
+ #define HAVE_STDLIB_H 1
+@@ -344,16 +344,16 @@
+ #define HAVE_TLHELP32_H 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_UINT16_T */
++#define HAVE_UINT16_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_UINT32_T */
++#define HAVE_UINT32_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_UINT64_T */
++#define HAVE_UINT64_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_UINT8_T */
++#define HAVE_UINT8_T 1
+ 
+ /* define this if the type is available on the system */
+ #define HAVE_UINTPTR_T 1
+
+--- build\msvc9\src\config-release.h	Tue Mar 02 06:20:09 2010
++++ build\msvc9\src\config-release_new.h	Sat Mar 15 11:07:31 2014
+@@ -209,16 +209,16 @@
+ /* #undef HAVE_ILOGB */
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT16_T */
++#define HAVE_INT16_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT32_T */
++#define HAVE_INT32_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT64_T */
++#define HAVE_INT64_T 1
+ 
+ /* define this if the type is available on the system */
+-/* #undef HAVE_INT8_T */
++#define HAVE_INT8_T 1
+ 
+ /* define this if the type is available on the system */
+ #define HAVE_INTPTR_T 1
+@@ -296,7 +296,7 @@
+ #define HAVE_STDDEF_H 1
+ 
+ /* Define to 1 if you have the <stdint.h> header file. */
+-/* #undef HAVE_STDINT_H */
++#define HAVE_STDINT_H 1
+ 
+ /* Define to 1 if you have the <stdlib.h> header file. */
+ #define HAVE_STDLIB_H 1

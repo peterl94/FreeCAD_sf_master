@@ -112,6 +112,7 @@ def fromfile(filename):
   """ Parse patch file. If successful, returns
       PatchSet() object. Otherwise returns False.
   """
+  info("patch.fromfile {0}".format(filename))
   patchset = PatchSet()
   debug("reading %s" % filename)
   fp = open(filename, "rb")

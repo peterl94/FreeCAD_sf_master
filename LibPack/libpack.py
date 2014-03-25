@@ -1,4 +1,5 @@
 from __future__ import print_function
+import logging
 import sys
 import os
 import shutil
@@ -30,6 +31,9 @@ class LibPack:
         self._build_formulas = {}
         self._config_file_path = None
         self._manifest_path = None
+
+        self.cmake_generator = None
+        self.cmake_projext = ".vcproj"
         
         self._load_config(config_path)
 
@@ -113,7 +117,7 @@ class LibPack:
             module = importer.find_module(name).load_module(full_name)
             
             valid = True
-            attributes = ["name", "version", "source", "depends_on",
+            attributes = ["name", "version", "source", "depends_on", "patches",
                           "build", "install"]
             
             if not hasattr(module, "meta"):
@@ -229,11 +233,11 @@ class LibPack:
 
         return row != None
     
-    def install(self, name):
+    def install(self, name, force=False):
         if not self.exists:
             raise LibPackError("Config [LibPack] 'path' not set (have you run 'new'?)")
 
-        if self.is_installed(name):
+        if not force and self.is_installed(name):
             print(name + " is already installed")
             return
 
@@ -247,6 +251,16 @@ class LibPack:
             raise LibPackError("No build formula found for " + name)
 
         utils.setup_env(self.toolchain, self.arch)
+
+
+        if self.toolchain.startswith("vc"):
+            if self.toolchain == "vc9":
+                self.cmake_generator = "Visual Studio 9 2008"
+                self.cmake_projext = ".vcproj"
+            elif self.toolchain == "vc12":
+                self.cmake_generator = "Visual Studio 12"
+                self.cmake_projext = ".vcxproj"
+                        
         
         #install dependencies
         print("Dependencies: {0}\n".format(formula.depends_on)) 
@@ -257,9 +271,26 @@ class LibPack:
             src_dir = utils.get_source(formula.source, 
                                        self.config.get("Paths", "workspace"),
                                        formula.name + "-" + formula.version)
+
+            if formula.patches:
+                print("Patching:")
+                patch_dir = os.path.join(os.path.dirname(__file__), "patches")
+                for n in formula.patches:
+                    print("\t{0}".format(n))
+                    patch_file = os.path.join(patch_dir, "{0}\\{1}.diff".format(self.toolchain, n))
+                    if not os.path.exists (patch_file):
+                        patch_file = os.path.join(patch_dir, "{0}.diff".format(n))
+                    if not os.path.exists (patch_file):
+                        print("patch not found: {0}".format(n))
+                    else:
+                        path_result = utils.apply_patch(patch_file, src_dir)
+                        #if not path_result:
+                        #    print("\t FAILED!")
+                        #    exit(1)
+            
             old_cwd = os.getcwd()
             os.chdir(src_dir)
-            
+
             try:
                 print("Building {0}...\n".format(name))
                 formula.build(self)
@@ -286,7 +317,16 @@ class LibPack:
             elif os.path.isdir(path):
                 shutil.rmtree(path, ignore_errors=True)
         print("Successfully uninstalled " + name)
-    
+
+    def vcbuild(self, proj, config, platform, extras=[]):
+        if self.toolchain.startswith("vc"):
+            if self.toolchain == "vc9":
+        	utils.run_cmd("vcbuild", [proj, "{0}|{1}".format(config, platform)] + extras)
+            elif self.toolchain == "vc12":
+        	utils.run_cmd("msbuild", [proj, "/p:Configuration=" + config, "/p:Platform=" + platform] + extras)
+        else:
+            self.error("unsupported toolchain " + toolchain)
+
 
 class CustomHelpFormatter(optparse.IndentedHelpFormatter):
     def __init__(self,
@@ -422,17 +462,23 @@ class CommandParser(optparse.OptionParser):
 def on_new(parser, options, args):
     if not args:
         parser.error("toolchain argument is required")
-    if args[0] != "vc9":
-        parser.error("only vc9 is supported at the moment")
+    if args[0] != "vc9" and args[0] != "vc12":
+        parser.error("only vc9, vc12 are supported at the moment")
     if options.arch != "x86":
         parser.error("only x86 is supported at the moment")
     LIBPACK.new(args[0], options.arch)
 
 def on_install(parser, options, args):
+
+    if options.install_all:
+        import BuildFormulas
+        LIBPACK._load_build_formulas(BuildFormulas)
+        args = LIBPACK._build_formulas
+    
     if not args:
         parser.error("no formula specified")
     for n in args:
-        LIBPACK.install(n)
+        LIBPACK.install(n, force=options.force_install)
 
 def on_uninstall(parser, options, args):
     if not args:
@@ -458,12 +504,29 @@ def setup_parser(parser):
     help = "Install a library into the LibPack"
     parser.add_subcommand("install", callback=on_install,
                           usage=usage.format("install","FORMULA"),short_help=help)
+
+    parser.add_option("-A", subcmd="install", dest="install_all", action="store_true",
+                      help="Build all formulae")
+
+    parser.add_option("-f", "--force", subcmd="install", dest="force_install", action="store_true",
+                      help="Force building formulae")
+    
+
     help = "Remove a library from the LibPack"
     parser.add_subcommand("uninstall", callback=on_uninstall,
                           usage=usage.format("uninstall","FORMULA"),short_help=help)
 
 def main():
     global LIBPACK
+
+    root = logging.getLogger()
+
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    root.addHandler(ch)
+    
     try:
         LIBPACK = LibPack()
         parser = CommandParser()

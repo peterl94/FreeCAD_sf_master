@@ -50,6 +50,8 @@ def run_shell(args, env=None):
 
 def apply_patch(patch_filename, root_dir=None):
     p = patch.fromfile(patch_filename)
+    if not p:
+        return p
     return p.apply(root=root_dir)
 
 def environ_from_bat(bat_file, args, initial_env=None):
@@ -76,19 +78,31 @@ def setup_env(toolchain, arch):
     """
     
     #Minimum PATH for Windows
-    default_path = "C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;"
-    os.environ["PATH"] = default_path
+    #default_path = "C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;"
+    #os.environ["PATH"] = default_path
     
     if toolchain.startswith("vc"):
         #trimming "vc" gets the version
-        vs_dir = "Microsoft Visual Studio {0}.0".format(toolchain[2:])
-        env_bat = "C:\\{0}\\{1}\\VC\\vcvarsall.bat"
+	vs_ver = toolchain[2:]
+        vs_dir = "Microsoft Visual Studio {0}.0".format(vs_ver)
+        env_pattern = "C:\\{0}\\{1}\\VC\\vcvarsall.bat"
 
-        if os.path.exists(env_bat.format("Program Files (x86)", vs_dir)):
-            env_bat = env_bat.format("Program Files (x86)", vs_dir)
-        elif os.path.exists(env_bat.format("Program Files"), vs_dir):
-            env_bat = path.format("Program Files", vs_dir)
-        else:
+	env_bat = None
+
+	comntools = os.environ["VS{0}0COMNTOOLS".format(vs_ver)]
+	if comntools and os.path.exists("{0}vsvars32.bat".format(comntools)):
+	    env_bat = "{0}vsvars32.bat".format(comntools)
+
+	if not env_bat and comntools and os.path.exists("{0}vcvarsall.bat".format(comntools)):
+	    env_bat = "{0}vcvarsall.bat".format(comntools)
+
+        if not env_bat and os.path.exists(env_pattern.format("Program Files (x86)", vs_dir)):
+            env_bat = env_pattern.format("Program Files (x86)", vs_dir)
+
+        if not env_bat and os.path.exists(env_pattern.format("Program Files", vs_dir)):
+            env_bat = env_pattern.format("Program Files", vs_dir)
+
+	if not env_bat:
             raise ValueError("Could not find vcvarsall.bat for " + toolchain)
             
         if arch == "x64":
@@ -115,29 +129,36 @@ def _download_progress(blocks, block_size, file_size):
     
 def get_source(source, dest_dir, name):
     if source["type"] == "archive":
+
+        dest_src_dir = os.path.join(dest_dir, name)
+        changed = False
+        
         filename = os.path.basename(source["url"])
         dest_file = os.path.join(dest_dir, filename)
+
         if not os.path.exists(dest_file):
             print("Downloading {0}...".format(filename))
             urllib.urlretrieve(source["url"], dest_file, _download_progress)
+            changed = True
+
         #get directory name by extracting to empty directory
-        print("Extracting...")
         tmp_dir = os.path.join(dest_dir, "tmp_" + name)
-        if not os.path.exists(tmp_dir) or not os.listdir(tmp_dir):
+        if changed or not os.path.exists(tmp_dir) or not os.listdir(tmp_dir):
+            print("Extracting " + name)
             run_cmd("7z", ["x", "-y", "-o" + tmp_dir, dest_file], silent=True)
+            changed = True
 
         #it might be a tar
         contents = os.listdir(tmp_dir)
         if contents[0].endswith(".tar"):
             dest_file = os.path.join(tmp_dir, contents[0])
+            print("Extracting " + contents[0])
             run_cmd("7z", ["x", "-y", "-o" + tmp_dir, dest_file], silent=True)
 
         src_dir = ""    
         for n in os.listdir(tmp_dir):
             if not n.endswith(".tar"):
                 src_dir = n
-        
-        dest_src_dir = os.path.join(dest_dir, name)
         
         #if os.path.exists(dest_src_dir):
             #shutil.rmtree(dest_src_dir)
@@ -302,3 +323,18 @@ def move(src, dest_root, dest, root=True, ignore=None):
         moved.append(os.path.join(dest, os.path.basename(src)))
 
     return moved
+
+
+def check_update(old_path, new_path):
+
+    if not os.path.exists(old_path):
+        return False
+
+    if not os.path.exists(new_path):
+        return True
+
+    old_time = os.path.getmtime(old_path)
+    new_time = os.path.getmtime(new_path)
+
+    return old_time > new_time
+    

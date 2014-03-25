@@ -7,6 +7,7 @@ source = {"type":"archive", "url":
           "http://sourceforge.net/projects/boost/files/boost/1.55.0"\
           "/boost_1_55_0.zip"}
 depends_on = []
+patches = ["boost"]
     
 def build(libpack):
     if libpack.toolchain.startswith("vc"):
@@ -14,6 +15,12 @@ def build(libpack):
         utils.run_shell("bootstrap")
         if libpack.toolchain == "vc9":
             utils.run_shell("b2 toolset=msvc-9.0 link=shared "\
+                            "variant=debug,release "\
+                            "--with-filesystem --with-program_options "\
+                            "--with-regex --with-signals --with-system "\
+                            "--with-thread", env=os.environ)
+        if libpack.toolchain == "vc12":
+            utils.run_shell("b2 toolset=msvc-12.0 link=shared "\
                             "variant=debug,release "\
                             "--with-filesystem --with-program_options "\
                             "--with-regex --with-signals --with-system "\
