@@ -18,11 +18,8 @@ def build(libpack):
 
     os.chdir("cmake_build")
 
-    tmp_install = os.path.join(libpack.config.get("Paths", "workspace"),
-                               "tmp_install")
-
     if libpack.toolchain.startswith("vc"):
-        utils.run_cmd("cmake", ["-D","CMAKE_INSTALL_PREFIX=" + tmp_install,
+        utils.run_cmd("cmake", ["-D","CMAKE_INSTALL_PREFIX=" + libpack.tmp_install,
                                 "-G", libpack.cmake_generator, ".."])
 
         print("\nBuilding release...\n")
@@ -33,23 +30,20 @@ def build(libpack):
 
 
 def install(libpack):
-    tmp_install = os.path.join(libpack.config.get("Paths", "workspace"),
-                               "tmp_install")
+
+    os.chdir("cmake_build")
 
     if libpack.toolchain.startswith("vc"):
         libpack.vcbuild("INSTALL" + libpack.cmake_projext, "Release", "Win32")
         libpack.vcbuild("INSTALL" + libpack.cmake_projext, "Debug", "Win32")
 
-    files = utils.move(os.path.join(tmp_install, "include"),
+    files = utils.move(os.path.join(libpack.tmp_install, "include"),
                        libpack.path, "include", root=False)
 
-    files.extend(utils.move(os.path.join(tmp_install, "lib"),
+    files.extend(utils.move(os.path.join(libpack.tmp_install, "lib"),
                             libpack.path, "lib", root=False))
-    files.extend(utils.move(os.path.join(tmp_install, "bin"),
+    files.extend(utils.move(os.path.join(libpack.tmp_install, "bin"),
                             libpack.path, "bin", root=False))
 
     libpack.manifest_add(name, version, files)
-
-    os.chdir("..")
-    utils.shutil.rmtree(tmp_install)
 

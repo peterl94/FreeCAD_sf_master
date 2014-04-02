@@ -5,38 +5,42 @@ from subprocess import CalledProcessError
 name = "python"
 version = "2.7.6"
 source = {"type":"archive", "url":
-          "http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tgz"}
-depends_on = []
+          "http://www.python.org/ftp/python/{0}/Python-{0}.tgz".format(version)}
+depends_on = ["tcl"]
 patches = ["python_pyconfig", "python_pyconfig2"]
 
 def build(libpack):
 
     if libpack.toolchain.startswith("vc"):
 
-        old_dir = os.getcwd()
         os.chdir("PCbuild")
 
         if libpack.toolchain == "vc12":
             if utils.check_update("python.vcproj", "python.vcxproj"):
                 utils.run_cmd("devenv", ["/upgrade", "pcbuild.sln"])
 
-        try:
             print("\nBuilding release...\n")
-            libpack.vcbuild("pcbuild.sln", "Release", "Win32")
-        except CalledProcessError as e:
-            #ignore errors because we don't need the modules that
-            #fail to build
-            print(e)
+            libpack.vcbuild("pcbuild.sln", "Release", "Win32", ["/t:python"])
 
-        try:
             print("\nBuilding debug...\n")
-            libpack.vcbuild("pcbuild.sln", "Debug", "Win32")
-        except CalledProcessError as e:
-            #ignore errors because we don't need the modules that
-            #fail to build
-            print(e)
+            libpack.vcbuild("pcbuild.sln", "Debug", "Win32", ["/t:python"])
 
-        os.chdir(old_dir)
+        if libpack.toolchain == "vc9":
+            try:
+                print("\nBuilding release...\n")
+                libpack.vcbuild("pcbuild.sln", "Release", "Win32")
+            except CalledProcessError as e:
+                #ignore errors because we don't need the modules that
+                #fail to build
+                print(e)
+
+            try:
+                print("\nBuilding debug...\n")
+                libpack.vcbuild("pcbuild.sln", "Debug", "Win32")
+            except CalledProcessError as e:
+                #ignore errors because we don't need the modules that
+                #fail to build
+                print(e)
 
 
 def install(libpack): 

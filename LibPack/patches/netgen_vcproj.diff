@@ -1,9 +1,11 @@
---- windows\nglib.vcproj	Wed Apr  7 04:35:49 2010
-+++ windows\nglib_new.vcproj	Fri Mar  7 11:58:03 2014
-@@ -66,6 +66,7 @@
+--- windows\nglib.vcproj	Wed Aug 07 10:09:27 2013
++++ windows\nglib_new.vcproj	Fri Mar 28 11:25:30 2014
+@@ -65,7 +65,8 @@
+ 			/>
  			<Tool
  				Name="VCLinkerTool"
- 				AdditionalDependencies="pthreadVC2.lib"
+-				AdditionalDependencies="pthreadVC2.lib"
++				AdditionalDependencies="pthreadVC2.lib zlibd.lib"
 +				OutputFile="$(OutDir)\$(ProjectName)d.dll"
  				LinkIncremental="2"
  				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\ext_libs\pthread-w32\lib&quot;"
@@ -16,10 +18,12 @@
  			/>
  		</Configuration>
  		<Configuration
-@@ -146,6 +148,7 @@
+@@ -145,7 +147,8 @@
+ 			/>
  			<Tool
  				Name="VCLinkerTool"
- 				AdditionalDependencies="pthreadVC2_64.lib"
+-				AdditionalDependencies="pthreadVC2_64.lib"
++				AdditionalDependencies="pthreadVC2_64.lib zlibd.lib"
 +				OutputFile="$(OutDir)\$(ProjectName)d.dll"
  				LinkIncremental="2"
  				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\ext_libs\pthread-w64\lib&quot;"
@@ -32,6 +36,33 @@
  			/>
  		</Configuration>
  		<Configuration
+@@ -232,7 +236,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="pthreadVC2.lib zdll.lib"
++				AdditionalDependencies="pthreadVC2.lib zlib.lib"
+ 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\ext_libs\pthreads-Win32\lib\x86&quot;;&quot;$(SolutionDir)..\..\ext_libs\zlib\x86\lib&quot;"
+ 				ManifestFile="$(OutDir)\$(TargetFileName).intermediate.manifest"
+ 			/>
+@@ -316,7 +320,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="pthreadVC2.lib zlib1.lib"
++				AdditionalDependencies="pthreadVC2.lib zlib.lib"
+ 				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\..\ext_libs\pthreads-Win32\lib\x64&quot;;&quot;$(SolutionDir)..\..\ext_libs\zlib\x64\lib&quot;"
+ 				ManifestFile="$(OutDir)\$(TargetFileName).intermediate.manifest"
+ 				TargetMachine="17"
+@@ -400,7 +404,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="pthreadVC2.lib TKernel.lib TKGeomBase.lib TKMath.lib TKG2d.lib TKG3d.lib TKXSBase.lib TKOffset.lib TKFillet.lib TKShHealing.lib TKMesh.lib TKMeshVS.lib TKTopAlgo.lib TKGeomAlgo.lib TKBool.lib TKPrim.lib TKBO.lib TKIGES.lib TKBRep.lib TKSTEPBase.lib TKSTEP.lib TKSTL.lib TKSTEPAttr.lib TKSTEP209.lib TKXDESTEP.lib TKXDEIGES.lib TKXCAF.lib TKDCAF.lib TKLCAF.lib"
++				AdditionalDependencies="pthreadVC2.lib zlib.lib TKernel.lib TKGeomBase.lib TKMath.lib TKG2d.lib TKG3d.lib TKXSBase.lib TKOffset.lib TKFillet.lib TKShHealing.lib TKMesh.lib TKMeshVS.lib TKTopAlgo.lib TKGeomAlgo.lib TKBool.lib TKPrim.lib TKBO.lib TKIGES.lib TKBRep.lib TKSTEPBase.lib TKSTEP.lib TKSTL.lib TKSTEPAttr.lib TKSTEP209.lib TKXDESTEP.lib TKXDEIGES.lib TKXCAF.lib TKDCAF.lib TKLCAF.lib"
+ 				AdditionalLibraryDirectories="$(CASROOT)\win32\lib;&quot;$(SolutionDir)..\..\ext_libs\pthread-w32\lib&quot;"
+ 				ManifestFile="$(OutDir)\$(TargetFileName).intermediate.manifest"
+ 			/>
 @@ -427,6 +431,7 @@
  			<Tool
  				Name="VCPostBuildEventTool"
@@ -40,6 +71,15 @@
  			/>
  		</Configuration>
  		<Configuration
+@@ -484,7 +489,7 @@
+ 			/>
+ 			<Tool
+ 				Name="VCLinkerTool"
+-				AdditionalDependencies="pthreadVC2_64.lib TKernel.lib TKGeomBase.lib TKMath.lib TKG2d.lib TKG3d.lib TKXSBase.lib TKOffset.lib TKFillet.lib TKShHealing.lib TKMesh.lib TKMeshVS.lib TKTopAlgo.lib TKGeomAlgo.lib TKBool.lib TKPrim.lib TKBO.lib TKIGES.lib TKBRep.lib TKSTEPBase.lib TKSTEP.lib TKSTL.lib TKSTEPAttr.lib TKSTEP209.lib TKXDESTEP.lib TKXDEIGES.lib TKXCAF.lib TKLCAF.lib"
++				AdditionalDependencies="pthreadVC2_64.lib zlib.lib TKernel.lib TKGeomBase.lib TKMath.lib TKG2d.lib TKG3d.lib TKXSBase.lib TKOffset.lib TKFillet.lib TKShHealing.lib TKMesh.lib TKMeshVS.lib TKTopAlgo.lib TKGeomAlgo.lib TKBool.lib TKPrim.lib TKBO.lib TKIGES.lib TKBRep.lib TKSTEPBase.lib TKSTEP.lib TKSTL.lib TKSTEPAttr.lib TKSTEP209.lib TKXDESTEP.lib TKXDEIGES.lib TKXCAF.lib TKLCAF.lib"
+ 				AdditionalLibraryDirectories="$(CASROOT)\win64\lib;&quot;$(SolutionDir)..\..\ext_libs\pthread-w64\lib&quot;"
+ 				ManifestFile="$(OutDir)\$(TargetFileName).intermediate.manifest"
+ 				TargetMachine="17"
 @@ -512,6 +517,7 @@
  			<Tool
  				Name="VCPostBuildEventTool"

@@ -6,7 +6,7 @@ name = "qt"
 version = "4.8.5"
 source = {"type":"archive", "url":
           "http://download.qt-project.org/official_releases"\
-          "/qt/4.8/4.8.5/qt-everywhere-opensource-src-4.8.5.zip"}
+          "/qt/4.8/{0}/qt-everywhere-opensource-src-{0}.zip".format(version)}
 depends_on = []
 patches = ["qt"]
 

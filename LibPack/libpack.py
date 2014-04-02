@@ -232,6 +232,24 @@ class LibPack:
         conn.close()
 
         return row != None
+
+    def get_formula(self, name):
+
+        if self._build_formulas == {}:
+            import BuildFormulas
+            self._load_build_formulas(BuildFormulas)
+            
+        return self._build_formulas[name]
+
+    def get_formula_dir(self, name):
+
+        formula = self.get_formula(name)
+
+        return os.path.join(self.config.get("Paths", "workspace"),
+                            formula.name + "-" + formula.version)
+
+
+        
     
     def install(self, name, force=False):
         if not self.exists:
@@ -241,12 +259,8 @@ class LibPack:
             print(name + " is already installed")
             return
 
-        if self._build_formulas == {}:
-            import BuildFormulas
-            self._load_build_formulas(BuildFormulas)
-            
         try:
-            formula = self._build_formulas[name]
+            formula = self.get_formula(name)
         except KeyError:
             raise LibPackError("No build formula found for " + name)
 
@@ -289,13 +303,25 @@ class LibPack:
                         #    exit(1)
             
             old_cwd = os.getcwd()
-            os.chdir(src_dir)
+
+            self.tmp_install = tmp_install = os.path.join(self.config.get("Paths", "workspace"),
+                                            "tmp_install_" + name)
+            if os.path.exists(tmp_install):
+                utils.rmtree(tmp_install)
+
+            os.mkdir(tmp_install)
+
+            backup_environ = dict(os.environ)
 
             try:
                 print("Building {0}...\n".format(name))
+                os.chdir(src_dir)
                 formula.build(self)
+
                 print("Installing {0}...\n".format(name))
+                os.chdir(src_dir)
                 formula.install(self)
+
                 print("Successfully installed {0}\n".format(name))
             except CalledProcessError as e:
                 print(e)
@@ -303,6 +329,10 @@ class LibPack:
                 utils.run_cmd("cmd")
             
             os.chdir(old_cwd)
+            utils.rmtree(tmp_install)
+
+            os.environ.clear()
+            os.environ.update(backup_environ)
         
 
     def uninstall(self, name):
@@ -321,11 +351,26 @@ class LibPack:
     def vcbuild(self, proj, config, platform, extras=[]):
         if self.toolchain.startswith("vc"):
             if self.toolchain == "vc9":
-        	utils.run_cmd("vcbuild", [proj, "{0}|{1}".format(config, platform)] + extras)
+                utils.run_cmd("vcbuild", [proj, "{0}|{1}".format(config, platform)] + extras)
             elif self.toolchain == "vc12":
-        	utils.run_cmd("msbuild", [proj, "/p:Configuration=" + config, "/p:Platform=" + platform] + extras)
+                utils.run_cmd("msbuild", [proj, "/m", "/nologo", "/verbosity:minimal",
+                                          "/p:Configuration=" + config,
+                                          "/p:Platform=" + platform] + extras)
         else:
             self.error("unsupported toolchain " + toolchain)
+
+    def upgrade_vcproj(self, name):
+
+        if name.endswith(".vcproj"):
+            name = name[:-len(".vcproj")]
+
+        old_name = name + ".vcproj"
+        new_name = name + ".vcxproj"
+
+        if utils.check_update(old_name, new_name):
+            utils.run_cmd("vcupgrade", ["-overwrite", "-nologo", old_name])
+
+        return new_name
 
 
 class CustomHelpFormatter(optparse.IndentedHelpFormatter):

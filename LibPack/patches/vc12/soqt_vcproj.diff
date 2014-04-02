@@ -1,0 +1,514 @@
+--- build\msvc9\soqt1.vcproj	Tue Mar 02 23:57:42 2010
++++ build\msvc9\soqt1_new.vcproj	Mon Mar 31 09:58:19 2014
+@@ -3511,8 +3511,8 @@
+ 					<Tool
+ 						Name="VCCustomBuildTool"
+ 						Description="subst&apos;ing $(InputPath)"
+-						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\SoQtMaterialEditor.h&#x0D;&#x0A;"
+-						Outputs="src\Inventor\Qt\SoQtMaterialEditor.h"
++						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\editors\SoQtMaterialEditor.h&#x0D;&#x0A;"
++						Outputs="src\Inventor\Qt\editors\SoQtMaterialEditor.h"
+ 					/>
+ 				</FileConfiguration>
+ 				<FileConfiguration
+@@ -3521,8 +3521,8 @@
+ 					<Tool
+ 						Name="VCCustomBuildTool"
+ 						Description="subst&apos;ing $(InputPath)"
+-						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\SoQtMaterialEditor.h&#x0D;&#x0A;"
+-						Outputs="src\Inventor\Qt\SoQtMaterialEditor.h"
++						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\editors\SoQtMaterialEditor.h&#x0D;&#x0A;"
++						Outputs="src\Inventor\Qt\editors\SoQtMaterialEditor.h"
+ 					/>
+ 				</FileConfiguration>
+ 				<FileConfiguration
+@@ -3531,8 +3531,8 @@
+ 					<Tool
+ 						Name="VCCustomBuildTool"
+ 						Description="subst&apos;ing $(InputPath)"
+-						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\SoQtMaterialEditor.h&#x0D;&#x0A;"
+-						Outputs="src\Inventor\Qt\SoQtMaterialEditor.h"
++						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\editors\SoQtMaterialEditor.h&#x0D;&#x0A;"
++						Outputs="src\Inventor\Qt\editors\SoQtMaterialEditor.h"
+ 					/>
+ 				</FileConfiguration>
+ 				<FileConfiguration
+@@ -3541,8 +3541,8 @@
+ 					<Tool
+ 						Name="VCCustomBuildTool"
+ 						Description="subst&apos;ing $(InputPath)"
+-						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\SoQtMaterialEditor.h&#x0D;&#x0A;"
+-						Outputs="src\Inventor\Qt\SoQtMaterialEditor.h"
++						CommandLine="..\..\cfg\csubst --file=..\..\src\Inventor\Qt\common\editors\SoGuiMaterialEditor.h.in:src\Inventor\Qt\editors\SoQtMaterialEditor.h&#x0D;&#x0A;"
++						Outputs="src\Inventor\Qt\editors\SoQtMaterialEditor.h"
+ 					/>
+ 				</FileConfiguration>
+ 			</File>
+@@ -8759,7 +8759,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8767,7 +8767,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8775,7 +8775,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8783,7 +8783,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8795,7 +8795,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8803,7 +8803,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8811,7 +8811,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8819,7 +8819,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8831,7 +8831,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8839,7 +8839,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8847,7 +8847,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8855,7 +8855,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8867,7 +8867,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8875,7 +8875,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8883,7 +8883,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8891,7 +8891,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8903,7 +8903,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8911,7 +8911,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8919,7 +8919,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8927,7 +8927,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8939,7 +8939,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8947,7 +8947,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8955,7 +8955,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -8963,7 +8963,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9859,7 +9859,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9867,7 +9867,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9875,7 +9875,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9883,7 +9883,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9895,7 +9895,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9903,7 +9903,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9911,7 +9911,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9919,7 +9919,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9931,7 +9931,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9939,7 +9939,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9947,7 +9947,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9955,7 +9955,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9967,7 +9967,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9975,7 +9975,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9983,7 +9983,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -9991,7 +9991,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10111,7 +10111,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10119,7 +10119,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10127,7 +10127,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10135,7 +10135,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10147,7 +10147,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10155,7 +10155,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10163,7 +10163,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10171,7 +10171,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10183,7 +10183,7 @@
+ 					>
+ 					<FileConfiguration
+ 						Name="DLL (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10191,7 +10191,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Release)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10199,7 +10199,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="LIB (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"
+@@ -10207,7 +10207,7 @@
+ 					</FileConfiguration>
+ 					<FileConfiguration
+ 						Name="DLL (Debug)|Win32"
+-						ExcludedFromBuild="true"
++						ExcludedFromBuild="false"
+ 						>
+ 						<Tool
+ 							Name="VCCustomBuildTool"

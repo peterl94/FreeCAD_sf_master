@@ -3,59 +3,40 @@ import os
 from subprocess import CalledProcessError
 
 name = "netgen"
-version = "4.9.14"
-source = {"type":"archive", "url":"http://sourceforge.net/code-snapshots/svn"\
-          "/n/ne/netgen-mesher/code/netgen-mesher-code-751-branches-netgen-4.9.zip"}
-depends_on = ["oce"]
-patches = []
+version = "5.1"
+source = {"type":"archive",
+          "url":"http://sourceforge.net/projects/netgen-mesher/files/netgen-mesher/{0}/netgen-{0}.tar.gz".format(version)}
+depends_on = ["oce", "tcl", "tk", "pthreads", "zlib"]
+patches = ["netgen_vcproj", "netgen_occ67_1", "netgen_occ67_2",
+           "netgen_occ67_3", "netgen_dllexport1", "netgen_dllexport2",
+           "netgen_dllexport3", "netgen_dllexport4"]
 
 def build(libpack):
 
     if libpack.toolchain.startswith("vc"):
-        #for now, use netgen's pre-compiled dependencies
-        if not os.path.exists("..\\ext_libs"):
-            os.mkdir("..\\ext_libs")
 
-        bit = "32"
-        if libpack.arch == "x64": bit = "64"
+        #bit = "32"
+        #if libpack.arch == "x64": bit = "64"
 
-        pthread_url = "http://sourceforge.net/projects/netgen-mesher/files"\
-                "/netgen-mesher/Additional%20Files/MSVC2008_Libs"\
-                "/pthread-w" + bit + ".zip"
-        tcl_url = "http://sourceforge.net/projects/netgen-mesher/files"\
-                "/netgen-mesher/Additional%20Files/MSVC2008_Libs"\
-                "/TclTkTixTogl-w" + bit + ".zip"
-        pthread_dirname = os.path.basename(pthread_url).split(".")[0]
-        tcl_dirname = os.path.basename(tcl_url).split(".")[0]
-        utils.get_source({"type":"archive", "url":pthread_url},
-                         "..\\ext_libs", pthread_dirname)
-        utils.get_source({"type":"archive", "url":tcl_url},
-                         "..\\ext_libs", tcl_dirname)
+        os.environ["INCLUDE"] = os.environ["INCLUDE"] + libpack.path + "\\include;"
+        os.environ["INCLUDE"] = os.environ["INCLUDE"] + libpack.path + "\\include\\oce;"
+        os.environ["LIB"] = os.environ["LIB"] + libpack.path + "\\lib;"
 
-        patches = ["vcproj", "occ67_1", "occ67_2", "occ67_3", 
-                   "dllexport1", "dllexport2", "dllexport3", "dllexport4"]
-        for n in patches:
-            filename = "..\\patches\\netgen_{0}.diff".format(n)
-            utils.apply_patch(os.path.join(os.path.dirname(__file__),
-                                           filename))
+        os.chdir("windows")
 
-        os.environ["LIB"] = os.environ["LIB"] + libpack.path + "\\lib"
-        os.environ["INCLUDE"] = os.environ["INCLUDE"] + libpack.path \
-                + "\\include\\oce;"
-        tcl_include = libpack.config.get("Paths", "workspace") \
-                + "\\ext_libs\\" + tcl_dirname + "\\include;"
-        os.environ["INCLUDE"] = os.environ["INCLUDE"] + tcl_include
-
-
+        vcproj = "nglib.vcproj"
         use_env = "/useenv"
+
         if libpack.toolchain == "vc12":
+            vcproj = libpack.upgrade_vcproj("nglib")
             use_env = "/p:UseEnv=true"
 
         print("\nBuilding release...\n")
-        libpack.vcbuild("windows\\nglib.sln", "Release(OCC)", "Win32", [use_env])
+        libpack.vcbuild(vcproj, "Release(OCC)", "Win32", [use_env])
 
         print("\nBuilding debug...\n")
-        libpack.vcbuild("windows\\nglib.sln", "Debug", "Win32", [use_env])
+        libpack.vcbuild(vcproj, "Debug", "Win32", [use_env])
+
 
 def install(libpack):
     files = utils.copyfiles(["nglib\\nglib.h"], libpack.path, "include")

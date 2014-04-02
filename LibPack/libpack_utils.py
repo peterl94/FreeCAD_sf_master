@@ -83,18 +83,18 @@ def setup_env(toolchain, arch):
     
     if toolchain.startswith("vc"):
         #trimming "vc" gets the version
-	vs_ver = toolchain[2:]
+        vs_ver = toolchain[2:]
         vs_dir = "Microsoft Visual Studio {0}.0".format(vs_ver)
         env_pattern = "C:\\{0}\\{1}\\VC\\vcvarsall.bat"
 
-	env_bat = None
+        env_bat = None
 
-	comntools = os.environ["VS{0}0COMNTOOLS".format(vs_ver)]
-	if comntools and os.path.exists("{0}vsvars32.bat".format(comntools)):
-	    env_bat = "{0}vsvars32.bat".format(comntools)
+        comntools = os.environ["VS{0}0COMNTOOLS".format(vs_ver)]
+        if comntools and os.path.exists("{0}vsvars32.bat".format(comntools)):
+            env_bat = "{0}vsvars32.bat".format(comntools)
 
-	if not env_bat and comntools and os.path.exists("{0}vcvarsall.bat".format(comntools)):
-	    env_bat = "{0}vcvarsall.bat".format(comntools)
+        if not env_bat and comntools and os.path.exists("{0}vcvarsall.bat".format(comntools)):
+            env_bat = "{0}vcvarsall.bat".format(comntools)
 
         if not env_bat and os.path.exists(env_pattern.format("Program Files (x86)", vs_dir)):
             env_bat = env_pattern.format("Program Files (x86)", vs_dir)
@@ -102,7 +102,7 @@ def setup_env(toolchain, arch):
         if not env_bat and os.path.exists(env_pattern.format("Program Files", vs_dir)):
             env_bat = env_pattern.format("Program Files", vs_dir)
 
-	if not env_bat:
+        if not env_bat:
             raise ValueError("Could not find vcvarsall.bat for " + toolchain)
             
         if arch == "x64":
@@ -161,7 +161,7 @@ def get_source(source, dest_dir, name):
                 src_dir = n
         
         #if os.path.exists(dest_src_dir):
-            #shutil.rmtree(dest_src_dir)
+            #rmtree(dest_src_dir)
             
         #os.rename(os.path.join(tmp_dir, src_dir), dest_src_dir)
 
@@ -190,7 +190,7 @@ def ignore_names_inverse(patterns, dir_filter=["*"]):
     Only include directories that don't match a pattern in dir_filter. 
     """
     def _ignore_function(path, names):
-	include_names = filter_multi(names, patterns)
+        include_names = filter_multi(names, patterns)
         exclude_dirs = filter_multi(names, dir_filter)
         ignore_names = set()
         for n in names:
@@ -214,7 +214,8 @@ def copyfiles(src_patterns, dest_root, dest, ignore_patterns=None):
     files = set()
     rel_paths = set()
     for p in src_patterns:
-        if os.path.isabs(p) and os.path.exists(p):
+        #if os.path.isabs(p) and os.path.exists(p):
+        if os.path.exists(p):
             files.add(p)
         else:
             rel_path = os.path.dirname(p)
@@ -268,19 +269,38 @@ def copytree(src, dest_root, dest, symlinks=False, root=True, ignore=None):
                     dest_src = os.path.join(abs_dest, name)
                     print(dest_src)
                     if os.path.isdir(dest_src):
-                        shutil.rmtree(dest_src)
+                        rmtree(dest_src)
+                    if os.path.isdir(dest_src):
+                        raise ValueError("failed to remove directory " +
+                                         dest_src)
+
                     
                     shutil.copytree(subsrc, dest_src, symlinks, ignore)
                     copied.append(os.path.join(dest, name))
     else:
         print(abs_dest)  
         if os.path.isdir(abs_dest):
-            shutil.rmtree(abs_dest)
+            rmtree(abs_dest)
             
         shutil.copytree(src, abs_dest, symlinks, ignore)
         copied.append(dest)
 
     return copied
+
+# handle deleting read-only files on windows, ugh.
+def rmtree(path):
+    shutil.rmtree(path, onerror=rmtree_onerror)
+
+def rmtree_onerror(func, path, exc):
+
+    import stat
+    excvalue = exc[1]
+    if func in (os.rmdir, os.remove):
+        os.chmod(path, stat.S_IRWXU| stat.S_IRWXG| stat.S_IRWXO) # 0777
+        func(path)
+    else:
+        raise
+    
         
 def move(src, dest_root, dest, root=True, ignore=None):
     """"
@@ -308,7 +328,7 @@ def move(src, dest_root, dest, root=True, ignore=None):
                     os.mkdir(abs_dest)
                 #delete destination if already exists
                 if os.path.isdir(dest_src):
-                    shutil.rmtree(dest_src)
+                    rmtree(dest_src)
                 if os.path.isfile(dest_src):
                     os.remove(dest_src)
                 
@@ -320,7 +340,7 @@ def move(src, dest_root, dest, root=True, ignore=None):
         dest_src = os.path.join(abs_dest, os.path.basename(src))
         print(dest_src)
         if os.path.isdir(dest_src):
-            shutil.rmtree(dest_src)
+            rmtree(dest_src)
         if os.path.isfile(dest_src):
             os.remove(dest_src)
             

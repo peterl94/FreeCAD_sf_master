@@ -18,8 +18,7 @@ def download_f2csrc_http(outdir):
         for line in f:
             if line.startswith('file\t<a href="'):
                 name = line.split('file\t<a href="')[1].split('"')[0]
-
-            filenames.append(name)
+                filenames.append(name)
 
     print("Downloading f2c source...")		    
     for n in filenames:
