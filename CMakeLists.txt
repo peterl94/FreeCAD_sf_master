@@ -127,11 +127,21 @@ if(APPLE)
 
     if(FREECAD_CREATE_MAC_APP)
         install(
-            DIRECTORY ${CMAKE_SOURCE_DIR}/src/MacAppBundle/FreeCAD.app
-            DESTINATION ${CMAKE_INSTALL_PREFIX}
+            DIRECTORY ${CMAKE_SOURCE_DIR}/src/MacAppBundle/FreeCAD.app/
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/${PACKAGE_NAME}.app
         )
-        set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/FreeCAD.app/Contents)
-        SET(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
+
+        # It should be safe to assume we've got sed on OSX...
+        install(CODE "
+            execute_process(COMMAND
+                sed -i \"\" -e s/VERSION_STRING_FROM_CMAKE/${PACKAGE_VERSION}/
+                -e s/NAME_STRING_FROM_CMAKE/${PACKAGE_NAME}/
+                ${CMAKE_INSTALL_PREFIX}/${PACKAGE_NAME}.app/Contents/Info.plist)
+               ")
+
+        set(CMAKE_INSTALL_PREFIX
+            ${CMAKE_INSTALL_PREFIX}/${PACKAGE_NAME}.app/Contents)
+        set(CMAKE_INSTALL_LIBDIR ${CMAKE_INSTALL_PREFIX}/lib)
     endif(FREECAD_CREATE_MAC_APP)
 endif(APPLE)
 
