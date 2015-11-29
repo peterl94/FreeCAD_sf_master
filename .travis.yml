@@ -6,7 +6,7 @@ os:
 before_install:
     - brew tap homebrew/science
     - brew tap sanelson/freecad
-    - brew install eigen freetype
+    - brew install oce
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
 
