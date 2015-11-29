@@ -13,7 +13,7 @@ before_install:
     - pip install matplotlib
 
 install:
-    - mkdir build && cd build && cmake -DBUILD_ROBOT=OFF -DFREECAD_USE_EXTERNAL_KDL=ON ../
+    - mkdir build && cd build && cmake -DBUILD_ROBOT=OFF -DBUILD_PATH=OFF -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
 
 script:
     - make -j2
@@ -22,10 +22,20 @@ script:
     - sleep 10 && pkill FreeCAD
     - cat /tmp/FreeCAD.log
     - grep --file=../.log_errors /tmp/FreeCAD.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from build directory" || ( echo "Error from .log_errors found!" && false )
-    - sudo make install
-    - /usr/local/bin/FreeCAD --run-test 0
-    - /usr/local/bin/FreeCAD --log-file /tmp/FreeCAD_installed.log &
+    - sudo make install/fast
+    - /usr/local/FreeCAD.app/Contents/bin/FreeCAD --run-test 0
+    - /usr/local/FreeCAD.app/Contents/bin/FreeCAD --log-file /tmp/FreeCAD_installed.log &
     - sleep 10 && pkill FreeCAD
     - cat /tmp/FreeCAD_installed.log
     - grep --file=../.log_errors /tmp/FreeCAD_installed.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from /usr/local/bin" || ( echo "Error from .log_errors found!" && false )
 
+before_deploy:
+    - cd /usr/local && zip -r -X FreeCAD_osx.zip FreeCAD.app -x FreeCAD.app/Contents/doc*
+
+deploy:
+    provider: releases
+    api_key: "57bd966e4865738019bf2699e7af1fde06cb6db1"
+    file: "/usr/local/FreeCAD_osx.zip"
+    skip_cleanup: true
+    on:
+      tags: true
