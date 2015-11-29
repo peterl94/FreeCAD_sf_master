@@ -34,8 +34,8 @@ before_deploy:
 
 deploy:
     provider: releases
-    api_key: "57bd966e4865738019bf2699e7af1fde06cb6db1"
+    api_key:
+      secure: DXkMNaBJv6bYZbMTufrGQhZEiqsxipAEzjVlwtc0np2KTyrIq4iyWwSyDwNTHY4AplVAlo+1i8U/Amg1XQ0cV6tpWx1eYzJDNGUfq8haoLq5qhdZwVIpcQlCGQBPqDT79FQthVqsNMS4xRw0sbpPI6WiC80855IApk5DDQMUAc/h0zEuBXj609BL03w8iDVU4fKP4tJOOJKf8UunAOWYGVvaXs3smPHwRFqkkSrx/73MhaVy0l4XQj+fgCe69Zfz4GY+9Owk1abZNlwDFoMNNdSZf7tOEs/iDGQJl7VGDVl4kODeT5BYTB1WIGNR+a3eFFzv0BelZPfGlHykRddTTJoBvVuolF3EF6fQJ/ExNtusIXsb60Kwhlxi2NhtihQcGt0eorIntJUPvbHghUq7IN3uP73gB/kMcdIZhXKMqlfDnlHeEHTSx57tUSRUXXkUlT8cMzju7gS/lhZJdDeDJKtSKf0riFcBxecPEB6LB1W5LbsdPeaw+V5EJdiLfTKUFDzzWRo+gpVCZ2TBaVWnvym1nF+fQDWVxwbUece9nMMW7UYnHCo2dvFkrz7H0v8UE4OWWTG+9JEUCdwdCzNvJSUfAWs0N5sWqYLUDOcmyUTLBrOLomR3RoGK2v/2Re3kQzQoqLlTgr5wbQyx9qY3vkmBmlY/3ECEp44TtGuCdzQ= 
     file: "/usr/local/FreeCAD_osx.zip"
-    skip_cleanup: true
     on:
       tags: true
