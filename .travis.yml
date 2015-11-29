@@ -4,10 +4,10 @@ os:
     - osx
 
 before_install:
+    - brew update
     - brew tap homebrew/science
     - brew tap sanelson/freecad
-    - brew update
-    - brew install opencascade
+    - brew install eigen freetype qt opencascade python pyside pyside-tools xerces-c
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
 
