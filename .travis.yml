@@ -11,7 +11,7 @@ before_install:
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
 
-instiall:
+install:
     - mkdir build && cd build && cmake ../
 
 script:
