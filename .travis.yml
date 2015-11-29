@@ -7,7 +7,7 @@ before_install:
     - brew update
     - brew tap homebrew/science
     - brew tap sanelson/freecad
-    - brew install eigen freetype qt opencascade python boost-python pyside pyside-tools xerces-c orocos-kdl
+    - brew install homebrew/science/oce
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
     - pip install matplotlib
