@@ -13,7 +13,7 @@ before_install:
     - pip install matplotlib
 
 install:
-    - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON ../
+    - mkdir build && cd build && cmake -DBUILD_ROBOT=OFF -DFREECAD_USE_EXTERNAL_KDL=ON ../
 
 script:
     - make -j2
