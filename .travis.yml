@@ -6,7 +6,8 @@ os:
 before_install:
     - brew tap homebrew/science
     - brew tap sanelson/freecad
-    - brew install oce
+    - brew update
+    - brew install opencascade
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
 
