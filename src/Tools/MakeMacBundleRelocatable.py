@@ -208,8 +208,12 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                 node = Node(os.path.basename(k2), os.path.dirname(k2))
                 if not graph.in_graph(node):
                     graph.add_node(node)
-                 
-                deps = create_dep_nodes(list_install_names(k2), s_paths)
+                inames = list_install_names(k2)
+                for iname in inames:
+                    if iname.endswith('Tk'):
+                        print(k2)
+
+                deps = create_dep_nodes(inames, s_paths)
                 for d in deps:
                     if d.name not in node.children:
                         node.children.append(d.name)
