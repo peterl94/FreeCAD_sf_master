@@ -10,7 +10,8 @@ before_install:
     - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
-    - pip install matplotlib
+    - export PYTHONUSERBASE=$(python-config --prefix)
+    - pip install --user matplotlib
 
 install:
     - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
