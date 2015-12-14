@@ -210,7 +210,7 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                     graph.add_node(node)
                 inames = list_install_names(k2)
                 for iname in inames:
-                    if iname.endswith('Tk'):
+                    if iname.find('libspatialite') > 0:
                         print(k2)
 
                 deps = create_dep_nodes(inames, s_paths)
