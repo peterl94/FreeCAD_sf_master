@@ -10,8 +10,12 @@ before_install:
     - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
     - brew install --without-framework --without-soqt sanelson/freecad/coin
     - brew install --HEAD pivy
-    - export PYTHONUSERBASE=$(python-config --prefix)
-    - pip install --user matplotlib
+    - pip install matplotlib==1.4.3
+    - git clone https://github.com/Heeks/libarea.git ./libarea
+    - pushd ./libarea && mkdir build && cd build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=cmake -DPYTHON_DIR=$(python-config —exec-prefix)/bin/ ../
+    - make install
+    - popd
 
 install:
     - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
