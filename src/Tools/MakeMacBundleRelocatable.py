@@ -220,8 +220,8 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
 		try:
                     inames = list_install_names(k2)
 		except Exception as e:
-		    print '****internal error while searching libs for node: {}/{}'.format(node)
-		    print '****k2: {}'.format(k2)
+		    '''print '****internal error while searching libs for node: {}/{}'.format(node)'''
+		    '''print '****k2: {}'.format(k2)'''
 		    print '****Node constructor arguments: {}/{}'.format(os.path.basename(k2),os.path.dirname(k2))
 		    pass
 		    
