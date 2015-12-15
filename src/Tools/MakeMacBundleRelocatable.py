@@ -87,7 +87,7 @@ def list_install_names(path_macho):
        output = subprocess.check_output(["otool", "-L", path_macho])
        lines = output.split("\t")
        libs = []
-    except CalledProcessError as e:
+    except subprocess.CalledProcessError as e:
        print '***** otool failed with reason: {}******'.format(e.returncode)
        print 'COMMAND: {}'.format(e.cmd)
        print 'OUTPUT: {}'.format(e.output)
