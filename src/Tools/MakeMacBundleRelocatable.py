@@ -222,10 +222,8 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                 if not graph.in_graph(node):
                     graph.add_node(node)
                 
-		if os.exists(k2)
-		    inames = list_install_names(k2)
-
-                    deps = create_dep_nodes(inames, s_paths)
+		if os.path.exists(k2):
+                    deps = create_dep_nodes(list_install_names(k2), s_paths)
                     for d in deps:
                         if d.name not in node.children:
                             node.children.append(d.name)
@@ -236,13 +234,8 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                         if not visited[dk]:
                             stack.append(dk)
 		else:
-		    print '***WARNING: library {} referenced in {} does not exist.  Executable may be invalid.'.format(k2,k)
+		    print '***WARNING: library {} referenced in {} does not exist - dependencies skipped...  executable may be invalid.'.format(k2,k)
 
-		'''except Exception as e:
-		    print '****internal error while searching libs for node: {}/{}'.format(node)
-		    print '****k2: {}'.format(k2)
-		    print '****Node constructor arguments: {}/{}'.format(os.path.basename(k2),os.path.dirname(k2))
-		    pass'''
 
 def in_bundle(lib, bundle_path):
     if lib.startswith(bundle_path):
