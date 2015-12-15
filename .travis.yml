@@ -10,9 +10,9 @@ before_install:
     - otool -L $LIBGDAL
     - brew list
     - if [ -e /LibraryFrameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
-    - #[ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ] && otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk
-    - #[ -e $LIBGDAL ] && brew unlink $LIBGDAL
-    - #[ -e $LIBGDAL ] && sudo rm /usr/local/lib/libgdal.1.dylib
+    - if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
+    - if [ -e $LIBGDAL ]; then brew unlink $LIBGDAL; fi
+    - if [ -e $LIBGDAL ]; then sudo rm /usr/local/lib/libgdal.1.dylib; fi
     - ls -l /usr/local/lib
     - brew tap homebrew/science
     - brew tap sanelson/freecad
@@ -25,8 +25,8 @@ before_install:
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
     - make -j2 install
     - popd
-    - #[ -e $LIBGDAL ] && brew unlink $LIBGDAL
-    - #[ -e $LIBGDAL ] && sudo sudo rm $LIBGDAL
+    - if [ -e $LIBGDAL ]; then brew unlink $LIBGDAL; fi
+    - if [ -e $LIBGDAL ]; then sudo sudo rm $LIBGDAL; fi
     - ls -l /usr/local/lib
 
 install:
