@@ -27,6 +27,8 @@ class Node:
         return not self.__eq__(other)
     def __hash__(self):
         return hash(self.name)
+    def __str__(self):
+        return self.path + '/' + self.name + '  ==> ' + str(self._marked)
         
 class DepsGraph:
     graph = {}
@@ -218,7 +220,10 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
 		try:
                     inames = list_install_names(k2)
 		except Exception as e:
-		    print '****internal error while searching libs for node: {}'.format(node)
+		    print '****internal error while searching libs for node: {}/{}'.format(node)
+		    print '****k2: {}'.format(k2)
+		    print '****Node constructor arguments: {}/{}'.format(os.path.basename(k2),os.path.dirname(k2))
+		    pass
 		    
                 for iname in inames:
                     if iname.find('libspatialite') > 0:
