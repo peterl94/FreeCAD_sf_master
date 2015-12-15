@@ -4,6 +4,7 @@ os:
     - osx
 
 before_install:
+    - system_profiler SPHardwareDataType
     - brew update
     - ls -l /usr/local/lib/
     - export LIBGDAL=/usr/local/lib/libgdal.1.dylib
@@ -11,6 +12,7 @@ before_install:
     - brew list
     - if [ -e /LibraryFrameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
     - if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
+    - if [ -e $LIBGDAL ]; then brew unlink gdal; fi
     - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
     - if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
     - brew tap homebrew/science
@@ -24,8 +26,9 @@ before_install:
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
     - make -j2 install
     - popd
+    - brew list
     - ls -l /usr/local/lib
-    - if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
+    - if [ -e $LIBGDAL ]; then brew unlink gdal; fi
     - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
     - ls -l /usr/local/lib/
 

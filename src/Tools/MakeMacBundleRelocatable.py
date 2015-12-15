@@ -97,7 +97,7 @@ def list_install_names(path_macho):
        print 'COMMAND: {}'.format(e.cmd)
        print 'OUTPUT: {}'.format(e.output)
        print 'PATH: {}'.format(path_macho)
-       raise 
+       pass
 
     #first line is the the filename, and if it is a library, the second line
     #is the install name of it
@@ -221,28 +221,28 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                 node = Node(os.path.basename(k2), os.path.dirname(k2))
                 if not graph.in_graph(node):
                     graph.add_node(node)
-		try:
-                    inames = list_install_names(k2)
-                    for iname in inames:
-                        if iname.find('libspatialite') > 0:
-                           print(k2)
+                
+		if os.exists(k2)
+		    inames = list_install_names(k2)
 
                     deps = create_dep_nodes(inames, s_paths)
                     for d in deps:
                         if d.name not in node.children:
-                           node.children.append(d.name)
+                            node.children.append(d.name)
 
                         dk = os.path.join(d.path, d.name)
                         if dk not in visited.keys():
-                           visited[dk] = False
+                            visited[dk] = False
                         if not visited[dk]:
-                           stack.append(dk)
-		
-		except Exception as e:
-		    '''print '****internal error while searching libs for node: {}/{}'.format(node)'''
-		    '''print '****k2: {}'.format(k2)'''
+                            stack.append(dk)
+		else:
+		    print '***WARNING: library {} referenced in {} does not exist.  Executable may be invalid.'.format(k2,k)
+
+		'''except Exception as e:
+		    print '****internal error while searching libs for node: {}/{}'.format(node)
+		    print '****k2: {}'.format(k2)
 		    print '****Node constructor arguments: {}/{}'.format(os.path.basename(k2),os.path.dirname(k2))
-		    pass
+		    pass'''
 
 def in_bundle(lib, bundle_path):
     if lib.startswith(bundle_path):
