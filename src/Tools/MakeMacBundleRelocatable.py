@@ -83,9 +83,16 @@ def get_path(name, search_paths):
     return None
 
 def list_install_names(path_macho):
-    output = subprocess.check_output(["otool", "-L", path_macho])
-    lines = output.split("\t")
-    libs = []
+    try:
+       output = subprocess.check_output(["otool", "-L", path_macho])
+       lines = output.split("\t")
+       libs = []
+    except CalledProcessError as e:
+       print '***** otool failed with reason: {}******'.format(e.returncode)
+       print 'COMMAND: {}'.format(e.cmd)
+       print 'OUTPUT: {}'.format(e.output)
+       print 'PATH: {}'.format(path_macho)
+       return None
 
     #first line is the the filename, and if it is a library, the second line
     #is the install name of it
