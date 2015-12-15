@@ -244,6 +244,7 @@ def in_bundle(lib, bundle_path):
 
 def copy_into_bundle(graph, node, bundle_path):
     if not in_bundle(node.path, bundle_path):
+	print 'Copying {} to {}'.format(node.path, bundle.path)
         subprocess.check_call(["cp", "-L", os.path.join(node.path, node.name),
                                os.path.join(bundle_path, "lib", node.name)])
         node.path = os.path.join(bundle_path, "lib")
@@ -296,7 +297,7 @@ def main():
 
     build_deps_graph(graph, bundle_path, dir_filter, search_paths)
 
-    print "Graph: {}".format(graph)
+    '''print "Graph: {}".format(graph)'''
     graph.visit(copy_into_bundle, [bundle_path])
     graph.visit(add_rpaths, [bundle_path])
 
