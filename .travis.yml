@@ -12,7 +12,7 @@ before_install:
     - if [ -e /LibraryFrameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
     - if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
     - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
-    - if [ -e $LIBGDAL ]; ls -l $LIBGDAL
+    - if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
     - brew tap homebrew/science
     - brew tap sanelson/freecad
     - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
@@ -25,7 +25,7 @@ before_install:
     - make -j2 install
     - popd
     - ls -l /usr/local/lib
-    - if [ -e $LIBGDAL ]; ls -l $LIBGDAL
+    - if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
     - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
     - ls -l /usr/local/lib/
 
