@@ -16,6 +16,8 @@ before_install:
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
     - make install
     - popd
+    - brew unlink libspatialite
+    - brew install libspatialite
 
 install:
     - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
