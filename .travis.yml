@@ -14,7 +14,7 @@ before_install:
     - git clone https://github.com/Heeks/libarea.git ./libarea
     - pushd ./libarea && mkdir build && cd build
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
-    - make install
+    - make -j2 install
     - popd
     - brew unlink libspatialite
 
