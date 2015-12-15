@@ -11,9 +11,8 @@ before_install:
     - brew list
     - if [ -e /LibraryFrameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
     - if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
-    - if [ -e $LIBGDAL ]; then brew unlink $LIBGDAL; fi
-    - if [ -e $LIBGDAL ]; then sudo rm /usr/local/lib/libgdal.1.dylib; fi
-    - ls -l /usr/local/lib
+    - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
+    - ls -l $LIBGDAL
     - brew tap homebrew/science
     - brew tap sanelson/freecad
     - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
@@ -25,9 +24,9 @@ before_install:
     - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
     - make -j2 install
     - popd
-    - if [ -e $LIBGDAL ]; then brew unlink $LIBGDAL; fi
-    - if [ -e $LIBGDAL ]; then sudo sudo rm $LIBGDAL; fi
     - ls -l /usr/local/lib
+    - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
+    - ls -l /usr/local/lib/
 
 install:
     - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
