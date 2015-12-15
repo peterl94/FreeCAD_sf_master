@@ -217,7 +217,7 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                     graph.add_node(node)
 		try:
                     inames = list_install_names(k2)
-		except as e:
+		except Exception as e:
 		    print '****internal error while searching libs for node: {}'.format(node)
 		    
                 for iname in inames:
