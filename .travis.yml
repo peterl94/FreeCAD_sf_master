@@ -5,6 +5,10 @@ os:
 
 before_install:
     - brew update
+    - ls -l /usr/local/lib/
+    - otool -L /usr/local/lib/libgdal.1.dylib
+    - otool -L /Library/Frameworks/Tk.framework/Versions/8.5/Tk
+    - otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk
     - brew tap homebrew/science
     - brew tap sanelson/freecad
     - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl

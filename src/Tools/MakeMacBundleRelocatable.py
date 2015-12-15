@@ -30,6 +30,7 @@ class Node:
     def __str__(self):
         return self.path + '/' + self.name + '  ==> ' + str(self._marked)
         
+
 class DepsGraph:
     graph = {}
 
@@ -64,6 +65,9 @@ class DepsGraph:
                         if not self.graph[ck]._marked:
                             stack.append(ck)
                     operation(self, self.graph[node_key], *op_args)
+
+    def __str__(self):
+	return self.visit(print_node, ['none'])
 
 def is_macho(path):
     output = subprocess.check_output(["file", path])
@@ -140,7 +144,7 @@ def create_dep_nodes(install_names, search_paths):
         if install_path != "" and lib[0] != "@":
             #we have an absolte path install name
             if not path:
-                path = install_path
+               path = install_path
        
         if not path:
             raise LibraryNotFound(lib_name + "not found in given paths")
@@ -219,26 +223,26 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
                     graph.add_node(node)
 		try:
                     inames = list_install_names(k2)
+                    for iname in inames:
+                        if iname.find('libspatialite') > 0:
+                           print(k2)
+
+                    deps = create_dep_nodes(inames, s_paths)
+                    for d in deps:
+                        if d.name not in node.children:
+                           node.children.append(d.name)
+
+                        dk = os.path.join(d.path, d.name)
+                        if dk not in visited.keys():
+                           visited[dk] = False
+                        if not visited[dk]:
+                           stack.append(dk)
+		
 		except Exception as e:
 		    '''print '****internal error while searching libs for node: {}/{}'.format(node)'''
 		    '''print '****k2: {}'.format(k2)'''
 		    print '****Node constructor arguments: {}/{}'.format(os.path.basename(k2),os.path.dirname(k2))
 		    pass
-		    
-                for iname in inames:
-                    if iname.find('libspatialite') > 0:
-                        print(k2)
-
-                deps = create_dep_nodes(inames, s_paths)
-                for d in deps:
-                    if d.name not in node.children:
-                        node.children.append(d.name)
-
-                    dk = os.path.join(d.path, d.name)
-                    if dk not in visited.keys():
-                        visited[dk] = False
-                    if not visited[dk]:
-                        stack.append(dk)
 
 def in_bundle(lib, bundle_path):
     if lib.startswith(bundle_path):
@@ -281,6 +285,9 @@ def add_rpaths(graph, node, bundle_path):
             for path in rpaths:
                 subprocess.call(["install_name_tool", "-add_rpath", path, lib])
 
+def print_node(graph, node, third_arg):
+    print "node: {}".format(node)
+
 def main():
     if len(sys.argv) < 2:
         print "Usage " + sys.argv[0] + " path [additional search paths]"
@@ -296,6 +303,7 @@ def main():
 
     build_deps_graph(graph, bundle_path, dir_filter, search_paths)
 
+    print "Graph: {}".format(graph)
     graph.visit(copy_into_bundle, [bundle_path])
     graph.visit(add_rpaths, [bundle_path])
 
