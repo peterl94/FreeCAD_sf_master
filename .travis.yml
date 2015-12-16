@@ -1,52 +1,52 @@
 language: cpp
 
 os:
-	- osx
+    - osx
 
 before_install:
-	- system_profiler SPHardwareDataType
-	- brew update
-	- ls -l /usr/local/lib/
-	- export LIBGDAL=/usr/local/lib/libgdal.1.dylib
-	- otool -L $LIBGDAL
-	- brew list
-	- if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
-	- if [ -e $LIBGDAL ]; then brew unlink gdal; fi
-	- if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
-	- brew tap homebrew/science
-	- brew tap sanelson/freecad
-	- brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
-	- brew install --without-framework --without-soqt sanelson/freecad/coin
-	- brew install --HEAD pivy
-	- #pip install matplotlib 
-	- git clone https://github.com/Heeks/libarea.git ./libarea
-	- pushd ./libarea && mkdir build && cd build
-	- cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
-	- make -j2 install
-	- popd
-	- brew list
-	- ls -l /usr/local/lib
-	- if [ -e $LIBGDAL ]; then brew unlink gdal; fi
-	- ls -l /usr/local/lib/
+    - system_profiler SPHardwareDataType
+    - brew update
+    - ls -l /usr/local/lib/
+    - export LIBGDAL=/usr/local/lib/libgdal.1.dylib
+    - otool -L $LIBGDAL
+    - brew list
+    - if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
+    - if [ -e $LIBGDAL ]; then brew unlink gdal; fi
+    - if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
+    - brew tap homebrew/science
+    - brew tap sanelson/freecad
+    - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
+    - brew install --without-framework --without-soqt sanelson/freecad/coin
+    - brew install --HEAD pivy
+    - #pip install matplotlib 
+    - git clone https://github.com/Heeks/libarea.git ./libarea
+    - pushd ./libarea && mkdir build && cd build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
+    - make -j2 install
+    - popd
+    - brew list
+    - ls -l /usr/local/lib
+    - if [ -e $LIBGDAL ]; then brew unlink gdal; fi
+    - ls -l /usr/local/lib/
 install:
-	- mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
+    - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
 
 script:
-	- make -j4
-	- bin/FreeCAD --run-test 0
-	- bin/FreeCAD --log-file /tmp/FreeCAD.log &
-	- sleep 10 && pkill FreeCAD
-	- cat /tmp/FreeCAD.log
-	- grep --file=../.log_errors /tmp/FreeCAD.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from build directory" || ( echo "Error from .log_errors found!" && false )
-	- sudo make install/fast
-	- "/usr/local/FreeCAD.app/Contents/bin/FreeCAD --run-test 0"
-	- "/usr/local/FreeCAD.app/Contents/bin/FreeCAD --log-file /tmp/FreeCAD_installed.log &"
-	- sleep 10 && pkill FreeCAD
-	- cat /tmp/FreeCAD_installed.log
-	- grep --file=../.log_errors /tmp/FreeCAD_installed.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from /usr/local/bin" || ( echo "Error from .log_errors found!" && false )
+    - make -j4
+    - bin/FreeCAD --run-test 0
+    - bin/FreeCAD --log-file /tmp/FreeCAD.log &
+    - sleep 10 && pkill FreeCAD
+    - cat /tmp/FreeCAD.log
+    - grep --file=../.log_errors /tmp/FreeCAD.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from build directory" || ( echo "Error from .log_errors found!" && false )
+    - sudo make install/fast
+    - "/usr/local/FreeCAD.app/Contents/bin/FreeCAD --run-test 0"
+    - "/usr/local/FreeCAD.app/Contents/bin/FreeCAD --log-file /tmp/FreeCAD_installed.log &"
+    - sleep 10 && pkill FreeCAD
+    - cat /tmp/FreeCAD_installed.log
+    - grep --file=../.log_errors /tmp/FreeCAD_installed.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from /usr/local/bin" || ( echo "Error from .log_errors found!" && false )
 
 before_deploy:
-	- cd /usr/local && zip -r -X FreeCAD_osx.zip FreeCAD.app -x FreeCAD.app/Contents/doc*
+    - cd /usr/local && zip -r -X FreeCAD_osx.zip FreeCAD.app -x FreeCAD.app/Contents/doc*
 
 deploy:
   provider: releases
