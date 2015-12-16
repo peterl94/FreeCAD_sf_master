@@ -1,61 +1,59 @@
 language: cpp
 
 os:
-    - osx
+	- osx
 
 before_install:
-    - system_profiler SPHardwareDataType
-    - brew update
-    - ls -l /usr/local/lib/
-    - export LIBGDAL=/usr/local/lib/libgdal.1.dylib
-    - otool -L $LIBGDAL
-    - brew list
-    - if [ -e /LibraryFrameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
-    - if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
-    - if [ -e $LIBGDAL ]; then brew unlink gdal; fi
-    - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
-    - if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
-    - brew tap homebrew/science
-    - brew tap sanelson/freecad
-    - brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
-    - brew install --without-framework --without-soqt sanelson/freecad/coin
-    - brew install --HEAD pivy
-    - #pip install matplotlib==1.4.3
-    - git clone https://github.com/Heeks/libarea.git ./libarea
-    - pushd ./libarea && mkdir build && cd build
-    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
-    - make -j2 install
-    - popd
-    - brew list
-    - ls -l /usr/local/lib
-    - if [ -e $LIBGDAL ]; then brew unlink gdal; fi
-    - if [ -e $LIBGDAL ]; then sudo sudo rm -f $LIBGDAL; fi
-    - ls -l /usr/local/lib/
-
+	- system_profiler SPHardwareDataType
+	- brew update
+	- ls -l /usr/local/lib/
+	- export LIBGDAL=/usr/local/lib/libgdal.1.dylib
+	- otool -L $LIBGDAL
+	- brew list
+	- if [ -e /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk ]; then otool -L /System/Library/Frameworks/Tk.framework/Versions/8.5/Tk; fi
+	- if [ -e $LIBGDAL ]; then brew unlink gdal; fi
+	- if [ -e $LIBGDAL ]; then ls -l $LIBGDAL; fi
+	- brew tap homebrew/science
+	- brew tap sanelson/freecad
+	- brew install eigen freetype qt homebrew/science/oce python boost-python pyside pyside-tools xerces-c orocos-kdl
+	- brew install --without-framework --without-soqt sanelson/freecad/coin
+	- brew install --HEAD pivy
+	- #pip install matplotlib 
+	- git clone https://github.com/Heeks/libarea.git ./libarea
+	- pushd ./libarea && mkdir build && cd build
+	- cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/ -DPYTHON_DIR=$(python-config --exec-prefix)/bin/ ../
+	- make -j2 install
+	- popd
+	- brew list
+	- ls -l /usr/local/lib
+	- if [ -e $LIBGDAL ]; then brew unlink gdal; fi
+	- ls -l /usr/local/lib/
 install:
-    - mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
+	- mkdir build && cd build && cmake -DFREECAD_USE_EXTERNAL_KDL=ON -DFREECAD_CREATE_MAC_APP=ON ../
 
 script:
-    - make -j2
-    - bin/FreeCAD --run-test 0
-    - bin/FreeCAD --log-file /tmp/FreeCAD.log &
-    - sleep 10 && pkill FreeCAD
-    - cat /tmp/FreeCAD.log
-    - grep --file=../.log_errors /tmp/FreeCAD.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from build directory" || ( echo "Error from .log_errors found!" && false )
-    - sudo make install/fast
-    - /usr/local/FreeCAD.app/Contents/bin/FreeCAD --run-test 0
-    - /usr/local/FreeCAD.app/Contents/bin/FreeCAD --log-file /tmp/FreeCAD_installed.log &
-    - sleep 10 && pkill FreeCAD
-    - cat /tmp/FreeCAD_installed.log
-    - grep --file=../.log_errors /tmp/FreeCAD_installed.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from /usr/local/bin" || ( echo "Error from .log_errors found!" && false )
+	- make -j4
+	- bin/FreeCAD --run-test 0
+	- bin/FreeCAD --log-file /tmp/FreeCAD.log &
+	- sleep 10 && pkill FreeCAD
+	- cat /tmp/FreeCAD.log
+	- grep --file=../.log_errors /tmp/FreeCAD.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from build directory" || ( echo "Error from .log_errors found!" && false )
+	- sudo make install/fast
+	- "/usr/local/FreeCAD.app/Contents/bin/FreeCAD --run-test 0"
+	- "/usr/local/FreeCAD.app/Contents/bin/FreeCAD --log-file /tmp/FreeCAD_installed.log &"
+	- sleep 10 && pkill FreeCAD
+	- cat /tmp/FreeCAD_installed.log
+	- grep --file=../.log_errors /tmp/FreeCAD_installed.log ; [ $? == 1 ] && echo "No errors from .log_errors file found in the log after start from /usr/local/bin" || ( echo "Error from .log_errors found!" && false )
 
 before_deploy:
-    - cd /usr/local && zip -r -X FreeCAD_osx.zip FreeCAD.app -x FreeCAD.app/Contents/doc*
+	- cd /usr/local && zip -r -X FreeCAD_osx.zip FreeCAD.app -x FreeCAD.app/Contents/doc*
 
 deploy:
-    provider: releases
-    api_key:
-      secure: DXkMNaBJv6bYZbMTufrGQhZEiqsxipAEzjVlwtc0np2KTyrIq4iyWwSyDwNTHY4AplVAlo+1i8U/Amg1XQ0cV6tpWx1eYzJDNGUfq8haoLq5qhdZwVIpcQlCGQBPqDT79FQthVqsNMS4xRw0sbpPI6WiC80855IApk5DDQMUAc/h0zEuBXj609BL03w8iDVU4fKP4tJOOJKf8UunAOWYGVvaXs3smPHwRFqkkSrx/73MhaVy0l4XQj+fgCe69Zfz4GY+9Owk1abZNlwDFoMNNdSZf7tOEs/iDGQJl7VGDVl4kODeT5BYTB1WIGNR+a3eFFzv0BelZPfGlHykRddTTJoBvVuolF3EF6fQJ/ExNtusIXsb60Kwhlxi2NhtihQcGt0eorIntJUPvbHghUq7IN3uP73gB/kMcdIZhXKMqlfDnlHeEHTSx57tUSRUXXkUlT8cMzju7gS/lhZJdDeDJKtSKf0riFcBxecPEB6LB1W5LbsdPeaw+V5EJdiLfTKUFDzzWRo+gpVCZ2TBaVWnvym1nF+fQDWVxwbUece9nMMW7UYnHCo2dvFkrz7H0v8UE4OWWTG+9JEUCdwdCzNvJSUfAWs0N5sWqYLUDOcmyUTLBrOLomR3RoGK2v/2Re3kQzQoqLlTgr5wbQyx9qY3vkmBmlY/3ECEp44TtGuCdzQ= 
-    file: "/usr/local/FreeCAD_osx.zip"
-    on:
-      tags: true
+  provider: releases
+  api_key:
+    secure: 1g1niXRAyDjYGMMwcWVDTjMjV6z3ErYkNx1PzR7Clq2ygDO0smpwAJ0QUxtTwn2BvnhdCqRNcGIHUugHCvB5XxgbVQZCTZCbbIt3hTLK7+FMXb5QT2ROokPrLuzPgoHSsPNqR++LRCarjk6xtzGaGTLDtv58BaiantMjQ9dGzzifFEgHVCGSMkSfRhdkc1hwQsDlvSbZfKl8vt0GLSGuMcCcBovpUHJ59Aqv0Kg7QhhCzqcUSnb//1IvF9wOcRB0VjuRQvoTPwMe2Qf2XtFxqjern0DhZR0DlvzjZcTh6joWrHJraouuUM6psV6cl0b3KGQCCWGBxUaMbdxurRLaMm2T6v0nzV2veeAcdocCJ6Ii3p5b3SXuySyUK+I4OJ0rU315d5yzveIy1kTQMJtaYRABcKaiQ+bxcFcnBP+k11S00mTmPsZT8fu6iGi/vCHAOn72xcD+URPhW2X4wnVQfIXACmKgRy1LrSajv2trAZHFkEnOFqiK2rSZxYAtiHcRODFNhYiWBlLdc0E1b3Dc7JZ56JWKx4wtU8Xp9YtAeTZ2Gj6aD/rkIN/+PpGaGqhgCEn7A8QHSgz+xkSP+Nfw1+TucPhGoEsV4JICAjS9b7h0SyOVKTqc2R8ip3Crya5u1lUREPdlPDdnrdMg7cEhvVNoIcXL3M0TV/xXaJZvOIE=
+  file: "/usr/local/FreeCAD_osx.zip"
+  skip_cleanup: true
+  on:
+    repo: bblacey/FreeCAD_sf_master
+    branch: travis-ci-mac
