@@ -140,17 +140,18 @@ def create_dep_nodes(install_names, search_paths):
         #searching search_paths, so that we have control over what library
         #location to use 
         path = get_path(lib_name, search_paths)
+	print '+++lib={} path={} install_path={} lib_name={}'.format(lib,path,install_path,lib_name)
 
         if install_path != "" and lib[0] != "@":
             #we have an absolte path install name
-            if not path:
+            if not path and os.path.exists(install_path):
                path = install_path
-       
-        if not path:
+
+        if path is None:
             raise LibraryNotFound(lib_name + "not found in given paths")
 
         nodes.append(Node(lib_name, path))
-    
+
     return nodes
 
 def paths_at_depth(prefix, paths, depth):
@@ -213,28 +214,41 @@ def build_deps_graph(graph, bundle_path, dirs_filter=None, search_paths=[]):
     stack = []
     for k in visited.keys():
         if not visited[k]:
+	    print '>Checking: {}'.format(k)
             stack.append(k)
             while stack:
                 k2 = stack.pop()
-                visited[k2] = True
+		print '...{}'.format(k2)
 
+		if not os.path.exists(k2):
+		    print '***Library {} referenced in {} does not exist...  searching in system library search path'.format(k2,k)
+		    p = get_path(os.path.basename(k2), search_paths)
+		    if p is not None:
+			print 'Using library {} as substitute for {}'.format(p,k2)
+			k2 = p
+		    else:
+			print '***WARNING: unable to find substitute library for {} - dependencies skipped... executable may be invalid'.format(k2)
+			node = Node(os.path.basename(k2), os.path.dirname(k2))
+			visited[k2] = True
+			continue
+
+		print '>>>{}'.format(k2)
+                visited[k2] = True
                 node = Node(os.path.basename(k2), os.path.dirname(k2))
                 if not graph.in_graph(node):
                     graph.add_node(node)
                 
-		if os.path.exists(k2):
-                    deps = create_dep_nodes(list_install_names(k2), s_paths)
-                    for d in deps:
-                        if d.name not in node.children:
-                            node.children.append(d.name)
+                deps = create_dep_nodes(list_install_names(k2), s_paths)
+                for d in deps:
+		    print '<<<{}'.format(d)
+                    if d.name not in node.children:
+                        node.children.append(d.name)
 
-                        dk = os.path.join(d.path, d.name)
-                        if dk not in visited.keys():
-                            visited[dk] = False
-                        if not visited[dk]:
-                            stack.append(dk)
-		else:
-		    print '***WARNING: library {} referenced in {} does not exist - dependencies skipped...  executable may be invalid.'.format(k2,k)
+                    dk = os.path.join(d.path, d.name)
+                    if dk not in visited.keys():
+                        visited[dk] = False
+                    if not visited[dk]:
+                        stack.append(dk)
 
 
 def in_bundle(lib, bundle_path):
@@ -244,7 +258,7 @@ def in_bundle(lib, bundle_path):
 
 def copy_into_bundle(graph, node, bundle_path):
     if not in_bundle(node.path, bundle_path):
-	print 'Copying {} to {}'.format(node.path, bundle.path)
+	print 'Copying {} --> {}'.format(node, bundle_path)
         subprocess.check_call(["cp", "-L", os.path.join(node.path, node.name),
                                os.path.join(bundle_path, "lib", node.name)])
         node.path = os.path.join(bundle_path, "lib")
